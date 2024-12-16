@@ -1,14 +1,10 @@
 package genericheap
 
-import (
-	"cmp"
-)
-
-type Heap[T cmp.Ordered] struct {
+type Heap[T any] struct {
 	array        []T
 	heapProperty HeapProperty[T]
 }
-type HeapProperty[T cmp.Ordered] func(T, T) bool
+type HeapProperty[T any] func(T, T) bool
 
 type EmptyHeapError struct{}
 
@@ -16,7 +12,7 @@ func (e *EmptyHeapError) Error() string {
 	return "empty heap"
 }
 
-func New[T cmp.Ordered](arr []T, fn HeapProperty[T]) *Heap[T] {
+func New[T any](arr []T, fn HeapProperty[T]) *Heap[T] {
 	gh := Heap[T]{
 		array:        arr,
 		heapProperty: fn,
