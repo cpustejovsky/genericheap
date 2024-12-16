@@ -12,9 +12,10 @@ type GenericHeap[T cmp.Ordered] struct {
 type HeapProperty[T cmp.Ordered] func(T, T) bool
 
 func New[T cmp.Ordered](arr []T, fn HeapProperty[T]) *GenericHeap[T] {
-	gh := GenericHeap[T]{}
-	gh.array = arr
-	gh.heapProperty = fn
+	gh := GenericHeap[T]{
+		array:        arr,
+		heapProperty: fn,
+	}
 	if gh.Len() > 0 {
 		v, _ := gh.Pop()
 		gh.Push(v)
@@ -62,9 +63,9 @@ func (h *GenericHeap[T]) Pop() (T, error) {
 }
 
 func (h *GenericHeap[T]) down() {
-	var cur int
+	var cur, target int
 	for {
-		target := cur
+		target = cur
 		if left := cur*2 + 1; left < h.Len() && !h.heapProperty(h.array[target], h.array[left]) {
 			target = left
 		}
