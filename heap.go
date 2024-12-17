@@ -1,5 +1,7 @@
 package genericheap
 
+import "iter"
+
 type Heap[T any] struct {
 	array        []T
 	heapProperty HeapProperty[T]
@@ -14,14 +16,24 @@ func (e *EmptyHeapError) Error() string {
 
 func New[T any](arr []T, fn HeapProperty[T]) *Heap[T] {
 	gh := Heap[T]{
-		array:        arr,
+		array:        []T{},
 		heapProperty: fn,
 	}
-	if gh.Len() > 0 {
-		v, _ := gh.Pop()
+	for _, v := range arr {
 		gh.Push(v)
 	}
 	return &gh
+}
+
+func (h *Heap[T]) All() iter.Seq[T] {
+	return func(yield func(T) bool) {
+		for h.Len() > 0 {
+			v, err := h.Pop()
+			if !yield(v) || err != nil {
+				return
+			}
+		}
+	}
 }
 
 func (h *Heap[T]) Len() int {

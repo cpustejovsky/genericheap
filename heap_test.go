@@ -18,21 +18,37 @@ func RandomNumbers(size int) []int {
 }
 
 func TestHeapNew(t *testing.T) {
-	maxHeapProperty := func(parent, child int) bool {
-		return parent > child
-	}
-	nums := RandomNumbers(100)
-	mh := genericheap.New(nums, maxHeapProperty)
-	largest := -1
-	for mh.Len() > 0 {
-		v, err := mh.Pop()
-		if err != nil {
-			t.Fatal(err)
+	t.Run("MaxHeap", func(t *testing.T) {
+		maxHeapProperty := func(parent, child int) bool {
+			return parent > child
 		}
-		if v < largest {
-			t.Fatalf("expected %d to be largest element so far", v)
+		nums := RandomNumbers(100)
+		mh := genericheap.New(nums, maxHeapProperty)
+		largest := 5000
+		for mh.Len() > 0 {
+			v, _ := mh.Pop()
+			if v > largest {
+				t.Fatalf("failed")
+			}
+			largest = v
+
 		}
-	}
+	})
+	t.Run("MinHeap", func(t *testing.T) {
+		minHeapProperty := func(parent, child int) bool {
+			return parent < child
+		}
+		nums := RandomNumbers(100)
+		mh := genericheap.New(nums, minHeapProperty)
+		smallest := -5000
+		for mh.Len() > 0 {
+			v, _ := mh.Pop()
+			if v < smallest {
+				t.Fatalf("failed")
+			}
+			smallest = v
+		}
+	})
 }
 
 func TestMaxHeap(t *testing.T) {
@@ -91,6 +107,21 @@ func TestMinHeap(t *testing.T) {
 			t.Fatalf("error of type %T should of type %T", err, &check)
 		}
 	})
+}
+
+func TestHeapAll(t *testing.T) {
+	minHeapProperty := func(parent, child int) bool {
+		return parent < child
+	}
+	nums := RandomNumbers(10)
+	mh := genericheap.New(nums, minHeapProperty)
+	smallest := -5000
+	for v := range mh.All() {
+		if v < smallest {
+			t.Fatalf("failed")
+		}
+		smallest = v
+	}
 }
 
 var result int
