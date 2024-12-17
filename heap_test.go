@@ -93,20 +93,24 @@ func TestMinHeap(t *testing.T) {
 	})
 }
 
+var result int
+
 func BenchmarkGenericMinHeap(b *testing.B) {
 	nums := RandomNumbers(1000)
 	minHeapProperty := func(parent, child int) bool {
 		return parent < child
 	}
 	h := genericheap.New([]int{}, minHeapProperty)
+	var v int
 	for range b.N {
 		for _, num := range nums {
 			h.Push(num)
 		}
 		for h.Len() > 0 {
-			h.Pop()
+			v, _ = h.Pop()
 		}
 	}
+	result = v
 }
 
 // An IntHeap is a min-heap of ints.
@@ -134,12 +138,14 @@ func BenchmarkContainersMinHeap(b *testing.B) {
 	nums := RandomNumbers(1000)
 	h := &IntHeap{}
 	heap.Init(h)
+	var v int
 	for range b.N {
 		for _, num := range nums {
 			heap.Push(h, num)
 		}
 		for h.Len() > 0 {
-			heap.Pop(h)
+			v = heap.Pop(h).(int)
 		}
 	}
+	result = v
 }
