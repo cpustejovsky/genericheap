@@ -91,6 +91,15 @@ func (h *Heap[T]) down() {
 	}
 }
 
+func (h *Heap[T]) PushPop(val T) T {
+	if h.Len() == 0 || h.heapProperty(val, h.array[0]) {
+		return val
+	}
+	val, h.array[0] = h.array[0], val
+	h.down()
+	return val
+}
+
 func (h *Heap[T]) swap(x, y int) {
 	h.array[x], h.array[y] = h.array[y], h.array[x]
 }
