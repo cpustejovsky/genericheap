@@ -124,7 +124,64 @@ func TestHeapAll(t *testing.T) {
 	}
 }
 
+func TestHeapPushPop(t *testing.T) {
+	minHeapProperty := func(parent, child int) bool {
+		return parent < child
+	}
+	nums := RandomNumbers(100)
+	mh := genericheap.New(nums, minHeapProperty)
+
+	biggerNum := 6000
+	smallest := -5000
+	for range nums {
+		v := mh.PushPop(biggerNum)
+		if v < smallest {
+			t.Fatal("failed")
+		}
+		smallest = v
+		biggerNum--
+	}
+	for v := range mh.All() {
+		if v < smallest {
+			t.Fatal("failed")
+		}
+		smallest = v
+	}
+}
+
 var result int
+
+func BenchmarkPushThenPop(b *testing.B) {
+	nums1 := RandomNumbers(1000)
+	nums2 := RandomNumbers(1000)
+	minHeapProperty := func(parent, child int) bool {
+		return parent < child
+	}
+	h := genericheap.New(nums1, minHeapProperty)
+	var v int
+	for range b.N {
+		for _, num := range nums2 {
+			h.Push(num)
+			v, _ = h.Pop()
+		}
+	}
+	result = v
+}
+func BenchmarkPushPop(b *testing.B) {
+	nums1 := RandomNumbers(1000)
+	nums2 := RandomNumbers(1000)
+	minHeapProperty := func(parent, child int) bool {
+		return parent < child
+	}
+	h := genericheap.New(nums1, minHeapProperty)
+	var v int
+	for range b.N {
+		for _, num := range nums2 {
+			v = h.PushPop(num)
+		}
+	}
+	result = v
+}
 
 func BenchmarkGenericMinHeap(b *testing.B) {
 	nums := RandomNumbers(1000)
