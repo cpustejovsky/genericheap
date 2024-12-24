@@ -45,7 +45,7 @@ func (h *Heap[T]) Push(val T) {
 	h.up()
 }
 
-func (h *Heap[T]) up() {
+func (h Heap[T]) up() {
 	for cur := h.Len() - 1; cur > 0; {
 		parent := (cur - 1) / 2
 		if !h.heapProperty(h.array[parent], h.array[cur]) {
@@ -75,7 +75,16 @@ func (h *Heap[T]) Pop() (T, error) {
 	return r, nil
 }
 
-func (h *Heap[T]) down() {
+func (h *Heap[T]) PushPop(val T) T {
+	if h.Len() == 0 || h.heapProperty(val, h.array[0]) {
+		return val
+	}
+	val, h.array[0] = h.array[0], val
+	h.down()
+	return val
+}
+
+func (h Heap[T]) down() {
 	for cur, target := 0, 0; ; cur = target {
 		target = cur
 		if left := cur*2 + 1; left < h.Len() && !h.heapProperty(h.array[target], h.array[left]) {
@@ -91,15 +100,6 @@ func (h *Heap[T]) down() {
 	}
 }
 
-func (h *Heap[T]) PushPop(val T) T {
-	if h.Len() == 0 || h.heapProperty(val, h.array[0]) {
-		return val
-	}
-	val, h.array[0] = h.array[0], val
-	h.down()
-	return val
-}
-
-func (h *Heap[T]) swap(x, y int) {
+func (h Heap[T]) swap(x, y int) {
 	h.array[x], h.array[y] = h.array[y], h.array[x]
 }
