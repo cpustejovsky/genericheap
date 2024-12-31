@@ -67,7 +67,7 @@ func (h *Heap[T]) Peak() (T, error) {
 func (h *Heap[T]) Pop() (T, error) {
 	r, err := h.Peak()
 	if err != nil {
-		return r, ervalr
+		return r, err
 	}
 	if h.Len() == 1 {
 		h.array = h.array[:0]
