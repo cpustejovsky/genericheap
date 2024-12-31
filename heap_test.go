@@ -158,14 +158,12 @@ func BenchmarkPushThenPop(b *testing.B) {
 		return parent < child
 	}
 	h := genericheap.New(nums1, minHeapProperty)
-	var v int
-	for range b.N {
+	for b.Loop() {
 		for _, num := range nums2 {
 			h.Push(num)
-			v, _ = h.Pop()
+			h.Pop()
 		}
 	}
-	result = v
 }
 func BenchmarkPushPop(b *testing.B) {
 	nums1 := RandomNumbers(1000)
@@ -174,13 +172,11 @@ func BenchmarkPushPop(b *testing.B) {
 		return parent < child
 	}
 	h := genericheap.New(nums1, minHeapProperty)
-	var v int
-	for range b.N {
+	for b.Loop() {
 		for _, num := range nums2 {
-			v = h.PushPop(num)
+			h.PushPop(num)
 		}
 	}
-	result = v
 }
 
 func BenchmarkGenericMinHeap(b *testing.B) {
@@ -189,16 +185,14 @@ func BenchmarkGenericMinHeap(b *testing.B) {
 		return parent < child
 	}
 	h := genericheap.New([]int{}, minHeapProperty)
-	var v int
-	for range b.N {
+	for b.Loop() {
 		for _, num := range nums {
 			h.Push(num)
 		}
 		for h.Len() > 0 {
-			v, _ = h.Pop()
+			h.Pop()
 		}
 	}
-	result = v
 }
 
 // An IntHeap is a min-heap of ints.
@@ -226,14 +220,12 @@ func BenchmarkContainersMinHeap(b *testing.B) {
 	nums := RandomNumbers(1000)
 	h := &IntHeap{}
 	heap.Init(h)
-	var v int
-	for range b.N {
+	for b.Loop() {
 		for _, num := range nums {
 			heap.Push(h, num)
 		}
 		for h.Len() > 0 {
-			v = heap.Pop(h).(int)
+			heap.Pop(h)
 		}
 	}
-	result = v
 }
