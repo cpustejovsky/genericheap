@@ -12,7 +12,7 @@ To create a heap with this package, you need a backing array of any type and a `
 
 The `HeapProperty` function takes two elements of the same type as your backing array and returns a boolean.
 
-You should think of it as returning the relationship between parent and child that you want this heap to maintain.
+Think of it as returning the relationship between parent and child that you want the heap to maintain.
 
 For a min-heap of two `int`s, the function would look like this:
 ```go
